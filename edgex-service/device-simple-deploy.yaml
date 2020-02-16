@@ -1,0 +1,55 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  name: edgex-device-simple
+  namespace: default
+spec:
+  selector:
+    app: edgex-device-simple
+    release: guqiao
+  ports:
+  - name: aa
+    protocol: TCP
+    port: 49992
+    targetPort: 49992
+     
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: edgex-device-simple-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: edgex-device-simple
+      release: guqiao
+  template:
+    metadata:
+      labels:
+        app: edgex-device-simple
+        release: guqiao
+    spec:
+      hostname: edgex-device-simple
+      containers:
+      - name: edgex-device-simple
+        image: guqiaochina/docker-device-sdk-simple:1.1.1
+        ports:
+        - name: http
+          protocol: TCP
+          containerPort: 49992
+        volumeMounts:
+        - mountPath: "/edgex/logs"
+          name: nfs-pvlogs-go
+      volumes:
+        - name: nfs-pvlogs-go
+          persistentVolumeClaim:
+            claimName: nfs-pvclogs-go
+
+
+                       

@@ -1,0 +1,81 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  name: edgex-app-service-configurable-rules
+  namespace: default
+spec:
+  selector:
+    app: edgex-app-service-configurable-rules
+    release: guqiao
+  ports:
+  - name: http
+    protocol: TCP
+    port: 48095
+    targetPort: 48095
+  - name: zmq
+    protocol: TCP
+    port: 5566
+    targetPort: 5566
+     
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: edgex-app-service-configurable-rules-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: edgex-app-service-configurable-rules
+      release: guqiao
+  template:
+    metadata:
+      labels:
+        app: edgex-app-service-configurable-rules
+        release: guqiao
+    spec:
+      hostname: edgex-app-service-configurable-rules
+      containers:
+      - name: edgex-app-service-configurable-rules
+        image: guqiaochina/docker-app-service-configurable:1.0.0
+        ports:
+        - name: http            
+          protocol: TCP
+          containerPort: 48095
+        - name: zmq 
+          protocol: TCP
+          containerPort: 5566
+        env:
+          - name: EDGEX_SECURITY_SECRET_STORE
+            value: "false"
+          - name: edgex_registry
+            value: "consul://edgex-core-consul:8500"
+          - name: Clients_CoreData_Host
+            value: "edgex-core-data"
+          - name: Clients_Logging_Host
+            value: "edgex-support-logging"
+          - name: Logging_EnableRemote
+            value: "true"
+          - name: edgex_service
+            value:  http://edgex-app-service-configurable-rules:48095
+          - name: edgex_profile
+            value:  rules-engine
+          - name: Service_Host
+            value:  edgex-app-service-configurable-rules
+          - name: MessageBus_SubscribeHost_Host
+            value:  edgex-core-data
+        volumeMounts:
+        - mountPath: "/edgex/logs"
+          name: nfs-pvlogs-go
+
+      volumes:
+        - name: nfs-pvlogs-go
+          persistentVolumeClaim:
+            claimName: nfs-pvclogs-go
+
+                       

@@ -1,0 +1,21 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: edgex-app-service-configurable-rules
+  namespace: default
+  annotations: 
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: edgex-app-service-configurable-rules
+    http:
+      paths:
+      - path: 
+        backend:
+          serviceName: edgex-app-service-configurable-rules
+          servicePort: 48095

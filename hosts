@@ -1,0 +1,10 @@
+#edgex在k8s master机子上加入如下解析，用于edgex服务启动时ping pong测试连通性
+#edgex下面的Ip地址改为真实的master IP
+192.168.75.136 edgex-support-logging
+192.168.75.136 edgex-support-notifications
+192.168.75.136 edgex-core-data
+192.168.75.136 edgex-export-client
+192.168.75.136 edgex-core-metadata
+192.168.75.136 edgex-export-distro
+192.168.75.136 edgex-core-command
+192.168.75.136 edgex-core-consul

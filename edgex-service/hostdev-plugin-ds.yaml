@@ -1,0 +1,43 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: hostdev-device-plugin
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      name: hostdev-device-plugin-ds
+  template:
+    metadata:
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ""
+      labels:
+        name: hostdev-device-plugin-ds
+    spec:
+      tolerations:
+        - key: CriticalAddonsOnly
+          operator: Exists
+      hostNetwork: true
+      containers:
+        - name: hostdev
+          image: ccr.ccs.tencentyun.com/paas/hostdev:latest
+          args: ["--devs", "/dev/ttyS1:rwm"]
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: device-plugin
+              mountPath: /var/lib/kubelet/device-plugins
+            - name: dev
+              mountPath: /dev
+      volumes:
+        - name: device-plugin
+          hostPath:
+            path: /var/lib/kubelet/device-plugins
+        - name: dev
+          hostPath:
+            path: /dev

@@ -1,0 +1,80 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  name: edgex-config-seed
+  namespace: default
+spec:
+  selector:
+    app: edgex-config-seed
+    release: guqiao
+  ports:
+    - name: aa
+      protocol: TCP
+      port: 9333
+      targetPort: 9333
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: edgex-config-seed-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: edgex-config-seed
+      release: guqiao
+  template:
+    metadata:
+      labels:
+        app: edgex-config-seed
+        release: guqiao
+    spec:
+      hostname: edgex-config-seed
+      containers:
+      - name: edgex-config-seed
+        image: guqiaochina/docker-core-config-seed-go:1.1.1
+        ports:
+          - name: aa
+            protocol: TCP
+            containerPort: 9333
+        env:
+          - name: EDGEX_SECURITY_SECRET_STORE
+            value: "false"
+          - name: edgex_registry
+            value: "consul://edgex-core-consul:8500"
+          - name: Clients_CoreData_Host
+            value: "edgex-core-data"
+          - name: Clients_Logging_Host
+            value: "edgex-support-logging"
+          - name: Logging_EnableRemote
+            value: "true"
+        command: ["/edgex/cmd/config-seed/config-seed"]
+        args: ["--profile=docker", "--cmd=/edgex/cmd-redis", "--overwrite=true"]
+        volumeMounts:
+        - mountPath: "/consul/config"
+          name: nfs-pvcconsulconfig-go
+        - mountPath: "/consul/data"
+          name: nfs-pvcconsuldata-go
+        - mountPath: "/data/db"
+          name: nfs-pvcdb-go
+        - mountPath: "/edgex/logs"
+          name: nfs-pvclogs-go
+      volumes:
+        - name: nfs-pvcconsulconfig-go
+          persistentVolumeClaim:
+            claimName: nfs-pvcconsulconfig-go
+        - name: nfs-pvcconsuldata-go
+          persistentVolumeClaim:
+            claimName: nfs-pvcconsuldata-go
+        - name: nfs-pvcdb-go
+          persistentVolumeClaim:
+            claimName: nfs-pvcdb-go
+        - name: nfs-pvclogs-go
+          persistentVolumeClaim:
+            claimName: nfs-pvclogs-go
+

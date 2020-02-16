@@ -1,0 +1,21 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: support-rulesengine
+  namespace: default
+  annotations: 
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: support-rulesengine
+    http:
+      paths:
+      - path: 
+        backend:
+          serviceName: support-rulesengine
+          servicePort: 48075

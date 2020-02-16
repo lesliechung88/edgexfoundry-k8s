@@ -1,0 +1,54 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  name: edgex-device-mqtt
+  namespace: default
+spec:
+  selector:
+    app: edgex-device-mqtt
+    release: guqiao
+  ports:
+  - name: aa
+    protocol: TCP
+    port: 49982
+    targetPort: 49982
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: edgex-device-mqtt-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: edgex-device-mqtt
+      release: guqiao
+  template:
+    metadata:
+      labels:
+        app: edgex-device-mqtt
+        release: guqiao
+    spec:
+#      hostNetwork: true
+      hostname: edgex-device-mqtt
+      containers:
+      - name: edgex-device-mqtt
+        image: guqiaochina/docker-device-mqtt-go:1.1.0
+        ports:
+        - name: http            
+          protocol: TCP
+          containerPort: 49982
+        volumeMounts:
+        - mountPath: "/edgex/logs"
+          name: nfs-pvlogs-go
+      volumes:
+        - name: nfs-pvlogs-go
+          persistentVolumeClaim:
+            claimName: nfs-pvclogs-go
+                       

@@ -1,0 +1,46 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  name: edgex-mosquitto
+  namespace: default
+spec:
+  selector:
+    app: edgex-mosquitto
+    release: guqiao
+  ports:
+  - name: bb
+    protocol: TCP
+    port: 1883
+    targetPort: 1883
+     
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: edgex-mosquitto-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: edgex-mosquitto
+      release: guqiao
+  template:
+    metadata:
+      labels:
+        app: edgex-mosquitto
+        release: guqiao
+    spec:
+#      hostNetwork: true
+      hostname: edgex-mosquitto
+      containers:
+      - name: mosquitto
+        image: guqiaochina/docker_eclipse-mosquitto:lastest
+        ports:
+          - name: http
+            protocol: TCP
+            containerPort: 1883

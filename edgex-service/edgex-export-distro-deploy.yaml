@@ -1,0 +1,82 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  name: edgex-export-distro
+  namespace: default
+spec:
+  selector:
+    app: edgex-export-distro
+    release: guqiao
+  ports:
+  - name: aa
+    protocol: TCP
+    port: 48070
+    targetPort: 48070
+  - name: zmq
+    protocol: TCP
+    port: 5567
+    targetPort: 5567
+     
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: edgex-export-distro-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: edgex-export-distro
+      release: guqiao
+  template:
+    metadata:
+      labels:
+        app: edgex-export-distro
+        release: guqiao
+    spec:
+      hostname: edgex-export-distro
+      containers:
+      - name: edgex-export-distro
+        image: guqiaochina/docker-export-distro-go:1.1.0
+        ports:
+        - name: http
+          protocol: TCP
+          containerPort: 48070
+        - name: zmq
+          protocol: TCP
+          containerPort: 5567
+        env:
+          - name: EDGEX_SECURITY_SECRET_STORE
+            value: "false"
+          - name: edgex_registry
+            value: "consul://edgex-core-consul:8500"
+          - name: Clients_CoreData_Host
+            value: "edgex-core-data"
+          - name: Clients_Logging_Host
+            value: "edgex-support-logging"
+          - name: Logging_EnableRemote
+            value: "true"
+          - name: EXPORT_DISTRO_CLIENT_HOST
+            value: "export-client"
+          - name: EXPORT_DISTRO_DATA_HOST
+            value: "edgex-core-data"
+          - name: EXPORT_DISTRO_CONSUL_HOST
+            value: "edgex-core-consul"
+          - name: EXPORT_DISTRO_MQTTS_CERT_FILE
+            value: "none"
+          - name: EXPORT_DISTRO_MQTTS_KEY_FILE
+            value: "none"
+        volumeMounts:
+        - mountPath: "/edgex/logs"
+          name: nfs-pvlogs-go
+
+      volumes:
+        - name: nfs-pvlogs-go
+          persistentVolumeClaim:
+            claimName: nfs-pvclogs-go
+                       

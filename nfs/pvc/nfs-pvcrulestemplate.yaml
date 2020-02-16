@@ -1,0 +1,19 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-pvcrulestemplate-go
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Mi
+  storageClassName: nfs
+  selector:
+    matchLabels:
+      pv: nfs-pvrulestemplate-go

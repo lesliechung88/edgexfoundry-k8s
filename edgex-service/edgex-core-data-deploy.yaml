@@ -1,0 +1,70 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  name: edgex-core-data
+  namespace: default
+spec:
+  selector:
+    app: edgex-core-data
+    release: guqiao
+  ports:
+  - name: http
+    protocol: TCP
+    port: 48080
+    targetPort: 48080
+  - name: zmq
+    protocol: TCP
+    port: 5563
+    targetPort: 5563
+     
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: edgex-core-data-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: edgex-core-data
+      release: guqiao
+  template:
+    metadata:
+      labels:
+        app: edgex-core-data
+        release: guqiao
+    spec:
+      hostname: edgex-core-data
+      containers:
+      - name: edgex-core-data
+        image: guqiaochina/docker-core-data-go:1.1.0
+        ports:
+        - name: http            
+          protocol: TCP
+          containerPort: 48080
+        - name: zmq 
+          protocol: TCP
+          containerPort: 5563
+        env:
+          - name: EDGEX_SECURITY_SECRET_STORE
+            value: "false"
+          - name: edgex_registry
+            value: "consul://edgex-core-consul:8500"
+          - name: Clients_CoreData_Host
+            value: "edgex-core-data"
+          - name: Clients_Logging_Host
+            value: "edgex-support-logging"
+          - name: Logging_EnableRemote
+            value: "true"
+        volumeMounts:
+        - mountPath: "/edgex/logs"
+          name: nfs-pvlogs-go
+      volumes:
+        - name: nfs-pvlogs-go
+          persistentVolumeClaim:
+            claimName: nfs-pvclogs-go

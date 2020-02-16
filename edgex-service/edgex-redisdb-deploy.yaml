@@ -1,0 +1,103 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  name: edgex-redis
+  namespace: default
+spec:
+  selector:
+    app: edgex-redis
+    release: guqiao
+  ports:
+  - name: redis
+    protocol: TCP
+    port: 6379
+    targetPort: 6379
+  type: NodePort
+#  - name: redismanager
+#    protocol: TCP
+#    port: 8182
+#    targetPort: 8182
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: edgex-redis-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: edgex-redis
+      release: guqiao
+  template:
+    metadata:
+      labels:
+        app: edgex-redis
+        release: guqiao
+    spec:
+      hostNetwork: true
+      hostname: edgex-redis
+      containers:
+      - name: edgex-redis
+        image: redis:5.0.5-alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: redis
+          protocol: TCP
+          containerPort: 6379
+        env:
+          - name: EDGEX_SECURITY_SECRET_STORE
+            value: "false"
+          - name: edgex_registry
+            value: "consul://edgex-core-consul:8500"
+          - name: Clients_CoreData_Host
+            value: "edgex-core-data"
+          - name: Clients_Logging_Host
+            value: "edgex-support-logging"
+          - name: Logging_EnableRemote
+            value: "true"
+        volumeMounts:
+        - mountPath: "/data"
+          name: nfs-pvdb-go
+        - mountPath: "/edgex/logs"
+          name: nfs-pvlogs-go
+#      - name: redis-manager
+#        image: reasonduan/redis-manager:latest
+#        imagePullPolicy: IfNotPresent
+#        ports:
+#          - name: aa
+#            protocol: TCP
+#            containerPort: 8182
+#        env:
+#          - name: DATASOURCE_DATABASE
+#            value: "redis_manager"
+#          - name: DATASOURCE_URL
+#            value: "jdbc:mysql://106.13.182.190:3306/redis_manager?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2b8"
+#          - name: DATASOURCE_USERNAME
+#            value: "root"
+#          - name: DATASOURCE_PASSWORD
+#            value: "Leslie@88"
+      initContainers:
+        - image: busybox
+          name: setsysctl
+          command:
+            - sh
+            - -c
+            - echo 10000 > /proc/sys/net/core/somaxconn
+       #     - echo never > /sys/kernel/mm/transparent_hugepage/enabled  #在此没有，需在宿主主机上只行
+       #     - echo never > /sys/kernel/mm/transparent_hugepage/defrag #在此没有，需在宿主主机上只行
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+      volumes:
+        - name: nfs-pvdb-go
+          persistentVolumeClaim:
+            claimName: nfs-pvcdb-go
+        - name: nfs-pvlogs-go
+          persistentVolumeClaim:
+            claimName: nfs-pvclogs-go
+                       

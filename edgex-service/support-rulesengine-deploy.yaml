@@ -1,0 +1,64 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  name: support-rulesengine
+  namespace: default
+spec:
+  selector:
+    app: support-rulesengine
+    release: guqiao
+  ports:
+  - name: http
+    protocol: TCP
+    port: 48075
+    targetPort: 48075
+     
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: support-rulesengine-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: support-rulesengine
+      release: guqiao
+  template:
+    metadata:
+      labels:
+        app: support-rulesengine
+        release: guqiao
+    spec:
+      hostname: support-rulesengine
+      containers:
+      - name: support-rulesengine
+        image: guqiaochina/support-rulesengine:1.1.0
+        ports:
+        - name: http            
+          protocol: TCP
+          containerPort: 48075
+        volumeMounts:
+        - mountPath: "/edgex/edgex-support-rulesengine/templates"
+          name: nfs-pvrulestemplate-go
+        - mountPath: "/edgex/edgex-support-rulesengine/rules"
+          name: nfs-pvrules-go
+        - mountPath: "/edgex/logs"
+          name: nfs-pvlogs-go
+
+      volumes:
+        - name: nfs-pvlogs-go
+          persistentVolumeClaim:
+            claimName: nfs-pvclogs-go
+        - name: nfs-pvrulestemplate-go
+          persistentVolumeClaim:
+            claimName: nfs-pvcrulestemplate-go
+        - name: nfs-pvrules-go
+          persistentVolumeClaim:
+            claimName: nfs-pvcrules-go
+                       

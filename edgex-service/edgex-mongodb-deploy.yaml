@@ -1,0 +1,70 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  name: edgex-mongo
+  namespace: default
+spec:
+  selector:
+    app: edgex-mongo
+    release: guqiao
+  ports:
+  - name: aa
+    protocol: TCP
+    port: 27017
+    targetPort: 27017
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: edgex-mongo-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: edgex-mongo
+      release: guqiao
+  template:
+    metadata:
+      labels:
+        app: edgex-mongo
+        release: guqiao
+    spec:
+      hostNetwork: true
+      hostname: edgex-mongo
+      containers:
+      - name: edgex-mongo
+        image: guqiaochina/docker-edgex-mongo:1.1.0
+        ports:
+        - name: aa            
+          protocol: TCP
+          containerPort: 27017
+        env:
+          - name: EDGEX_SECURITY_SECRET_STORE
+            value: "false"
+          - name: edgex_registry
+            value: "consul://edgex-core-consul:8500"
+          - name: Clients_CoreData_Host
+            value: "edgex-core-data"
+          - name: Clients_Logging_Host
+            value: "edgex-support-logging"
+          - name: Logging_EnableRemote
+            value: "true"
+        volumeMounts:
+        - mountPath: "/data/db"
+          name: nfs-pvdb-go
+        - mountPath: "/edgex/logs"
+          name: nfs-pvlogs-go
+      volumes:
+        - name: nfs-pvdb-go
+          persistentVolumeClaim:
+            claimName: nfs-pvcdb-go
+        - name: nfs-pvlogs-go
+          persistentVolumeClaim:
+            claimName: nfs-pvclogs-go
+                       

@@ -1,0 +1,64 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  name: edgex-device-virtual
+  namespace: default
+spec:
+  selector:
+    app: edgex-device-virtual
+    release: guqiao
+  ports:
+  - name: aa
+    protocol: TCP
+    port: 49990
+    targetPort: 49990
+     
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: edgex-device-virtual-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: edgex-device-virtual
+      release: guqiao
+  template:
+    metadata:
+      labels:
+        app: edgex-device-virtual
+        release: guqiao
+    spec:
+      hostname: edgex-device-virtual
+      containers:
+      - name: edgex-device-virtual
+        image: guqiaochina/docker-device-virtual-go:1.1.1
+        args:
+        - --profile=docker
+        - --overwrite=true
+        - --confdir=/res
+        - --registry=consul://edgex-core-consul:8500
+        ports:
+        - name: http
+          protocol: TCP
+          containerPort: 49990
+        volumeMounts:
+        - mountPath: "/edgex/logs"
+          name: nfs-pvlogs-go
+        - mountPath: "/db"
+          name: nfs-pvvirtual-go
+      volumes:
+        - name: nfs-pvlogs-go
+          persistentVolumeClaim:
+            claimName: nfs-pvclogs-go
+        - name: nfs-pvvirtual-go
+          persistentVolumeClaim:
+            claimName: nfs-pvcvirtual-go
+
+                       

@@ -1,0 +1,61 @@
+# /*******************************************************************************
+#  * Copyright 2020 古桥教育
+#  * @author: 灰哥哥 1778006949@qq.com
+#  * added: Feb 10, 2020
+#  *******************************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  name: edgex-device-modbus
+  namespace: default
+spec:
+  selector:
+    app: edgex-device-modbus
+    release: guqiao
+  ports:
+  - name: http
+    protocol: TCP
+    port: 49991
+    targetPort: 49991
+     
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: edgex-device-modbus-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: edgex-device-modbus
+      release: guqiao
+  template:
+    metadata:
+      labels:
+        app: edgex-device-modbus
+        release: guqiao
+    spec:
+#      hostNetwork: true
+      hostname: edgex-device-modbus
+      containers:
+      - name: edgex-device-modbus
+        image: guqiaochina/docker-device-modbus-go:1.1.1
+        securityContext:
+          capabilities:
+            add: ["SYS_RAWIO"]
+          privileged: true
+        resources:
+          limits:
+            hostdev.k8s.io/dev_ttyS1: 1
+        ports:
+        - name: http            
+          protocol: TCP
+          containerPort: 49991
+        volumeMounts:
+        - mountPath: "/edgex/logs"
+          name: nfs-pvlogs-go
+      volumes:
+        - name: nfs-pvlogs-go
+          persistentVolumeClaim:
+            claimName: nfs-pvclogs-go
+                       
