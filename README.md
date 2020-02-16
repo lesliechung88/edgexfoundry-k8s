@@ -7,12 +7,20 @@
 ### Step 1: Grant executable permissions in the bin directory
 chmod -R +x ./bin 
  
-### Step 2: edit config file
+### Step 2: Modify config file
 
-edit edgex.conf, change NFS_HOST to your nfs server real IP  
-edit hosts, change IPs to your k8s master host IP
+edit edgex.conf, modify NFS_HOST to your nfs server real IP  
+edit hosts, modify IPs to your k8s master host IP
 
-### Step 3: Perform the installation
+### Step 3: Put images into images directory
+
+In directory of images holds using images which is defined in *-deploy.yaml file in  directory of edgex-service
+
+### Step 4: Modify deploy files 
+
+In the directory of edgex-service ,modify image to yours in *-deploy.yaml file
+
+### Step 5: Perform the installation
 
 cd ./bin  
 ./install-edgex-master.sh
@@ -24,9 +32,13 @@ INSTALL normal nodes MUST AFTER master install finished !
 ### Step 1: Grant executable permissions in the bin directory
 chmod -R +x ./bin 
 
-### Step 2: edit config file
+### Step 2: Modify config file
 
-edit edgex.conf, change NFS_HOST to your nfs server real IP  
+modify edgex.conf, change NFS_HOST to your nfs server real IP  
+
+### Step 3: Put images into images directory
+
+same to master host
 
 ## Start or Stop edgex services
 
