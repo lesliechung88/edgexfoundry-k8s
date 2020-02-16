@@ -50,10 +50,10 @@ cd ./bin
 Creating services is different  
 
 For core、support、export、service use:  
-./create-service.sh SERVICENAME  
+./create-edgex-service.sh SERVICENAME  
 
 Other service use:
-./create-edgex-service.sh
+./create-service.sh
 
 Delete service is the same, both use:
 ./delete-service.sh SERVICENAME  
