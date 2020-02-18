@@ -93,7 +93,9 @@ then unload on normal k8s nodes host:
 
 
 ## application images
-![image](https://gitee.com/hui_gege/edgexfoundry-k8s/blob/master/appimg/edgex-k8s.png)
+![image](https://github.com/lesliechung88/edgexfoundry-k8s/blob/master/appimg/edgex-install1.png)
+![image](https://github.com/lesliechung88/edgexfoundry-k8s/blob/master/appimg/edgex-install2.png)
+![image](https://github.com/lesliechung88/edgexfoundry-k8s/blob/master/appimg/edgex-run1.png)
 ![安装界面](https://images.gitee.com/uploads/images/2020/0218/110737_dc2f6896_1674860.png "edgex-k8s.png")  
 ![安装完成](https://images.gitee.com/uploads/images/2020/0218/110950_cb35f1e8_1674860.png "edgex-k8s-2.png")  
 ![UI显示图片](https://images.gitee.com/uploads/images/2020/0218/111031_70574ff7_1674860.png "edgex-run1.png")
