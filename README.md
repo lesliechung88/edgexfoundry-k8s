@@ -87,7 +87,7 @@ then unload on normal k8s nodes host:
 ./uninstall-edgex-node.sh  
 
 ## Download the prepared installation package
-下载已安装包edgexfoundry fuji版  
+下载安装包edgexfoundry fuji版  
 [edgex-fuji-k8s_standard_1.1.0.tar.gz](http://edgexfoundry.net/discuz/forum.php?mod=viewthread&tid=75&extra=page%3D1)
 
 
