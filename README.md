@@ -6,7 +6,7 @@ Currently only supports Centos kuternetes cluster ,Suggest Centos 6+ amd64
 自动化部署edgexfoundry到K8S集群，目前只支持操作系统Centos K8S 集群，建议  Centos 6+
 
 Warning: the shell scripts mentioned below, make sure to execute in the bin directory  
-提示：下面提到的shell 脚本，需在bin目录下执行  
+警告：下面提到的shell 脚本，需在bin目录下执行  
  
 ## Install on k8s master host 
 ### Step 1: Grant executable permissions in the bin directory
