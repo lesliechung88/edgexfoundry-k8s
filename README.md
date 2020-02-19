@@ -1,8 +1,5 @@
 # Automate deploy edgexfoundry on kubernetes
-
- 
-Currently only supports Centos kuternetes cluster ,Suggest Centos 6+ amd64
- 
+Currently only supports Centos kuternetes cluster ,Suggest Centos 6+ amd64   
 自动化部署edgexfoundry到K8S集群，目前只支持操作系统Centos K8S 集群，建议  Centos 6+
 
 Warning: the shell scripts mentioned below, make sure to execute in the bin directory  
