@@ -86,7 +86,11 @@ first unload on k8s master host:
 then unload on normal k8s nodes host:  
 ./uninstall-edgex-node.sh  
 
-## Download the prepared installation package
+
+## Package release
+Finally, you can package it into a * .tar.gz and publish it.
+
+# Download the prepared installation package
 下载安装包edgexfoundry fuji版  
 [edgex-fuji-k8s_standard_1.1.0.tar.gz](http://edgexfoundry.net/discuz/forum.php?mod=viewthread&tid=75&extra=page%3D1)
 
