@@ -87,7 +87,7 @@ then unload on normal k8s nodes host:
 ./uninstall-edgex-node.sh  
 
 
-## Package release
+# Package release
 Finally, you can package it into a * .tar.gz and publish it.
 
 # Download the prepared installation package
