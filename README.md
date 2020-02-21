@@ -106,4 +106,5 @@ Finally, you can package it into a * .tar.gz and publish it.
 ![安装完成](https://images.gitee.com/uploads/images/2020/0218/110950_cb35f1e8_1674860.png "edgex-k8s-2.png")  
 ![UI显示图片](https://images.gitee.com/uploads/images/2020/0218/111031_70574ff7_1674860.png "edgex-run1.png")
 ![KAFKA接收消息](https://images.gitee.com/uploads/images/2020/0218/111117_68386b45_1674860.png "edgex-k8s-3.png")
+![13157166232](https://github.com/lesliechung88/edgexfoundry-k8s/blob/master/appimg/weixin.png)
 
