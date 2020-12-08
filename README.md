@@ -91,7 +91,7 @@ then unload on normal k8s nodes host:
 Finally, you can package it into a * .tar.gz and publish it.
 
 # Video learning
-视频学习  
+
 [视频学习](https://guqiaoit.ke.qq.com/?tuin=69fa3ba5#tab=1&category=-1)
 
 
